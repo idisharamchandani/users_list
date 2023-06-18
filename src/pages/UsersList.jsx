@@ -12,6 +12,7 @@ import {
 import PullToRefresh from 'react-simple-pull-to-refresh';
 import { Link } from 'react-router-dom';
 import NoDataFound from '../components/NoDataFound';
+import Loader from '../components/Loader';
 
 
 const UsersList = ({
@@ -52,6 +53,8 @@ const UsersList = ({
     setIsRefreshing(false);
   };
 
+
+  
   const handleSearch = (event) => {
     const query = event.target.value;
     clearTimeout(searchTimeout);
@@ -61,7 +64,6 @@ const UsersList = ({
       }, 300)
     );
   };
-
 
   const filteredUsers = users.filter(
     (user) =>
@@ -107,11 +109,17 @@ const UsersList = ({
               </tr>
             </thead>
             <tbody>
-
-              {slice.map((user) => (
+            {loading ? (
+                <tr>
+                  <td colSpan={3} className="text-center">
+                    <Loader />
+                  </td>
+                </tr>
+              ) : (
+              slice.map((user) => (
                 <tr>
                   <td>
-                    <img src={user.avatar_url} alt={user.login} className="rounded-circle me-3 img-fluid img-thumbnail" />
+                    <img src={user.avatar_url} alt={user.login} className="rounded-circle me-3 img-fluid img-thumbnail" style={{ width: "100px", height: "100px" }} />
                   </td>
                   <td>{user.login}</td>
                   <td>
@@ -124,10 +132,12 @@ const UsersList = ({
                     />
                   </td>
                 </tr>
-              ))}
+              ))
+              )}
 
             </tbody>
           </table>
+          
           {isRefreshing && (
             <div className="text-center mt-3">Loading...</div>
           )}

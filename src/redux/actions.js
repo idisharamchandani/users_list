@@ -8,7 +8,7 @@ export const fetchUsers = () => {
     dispatch({ type: 'FETCH_USERS_REQUEST' });
 
     try {
-      const token = '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'; // Replace with your actual authentication token
+      const token = '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'; // Replace with your actual authentication token
       const response = await fetch('https://api.github.com/users', {
         headers: {
           Authorization: `Bearer ${token}`,

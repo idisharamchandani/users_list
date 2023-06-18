@@ -7,11 +7,10 @@ import PullToRefresh from 'react-simple-pull-to-refresh';
 import { bindActionCreators } from 'redux';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import NoDataFound from '../components/NoDataFound';
+import Loader from '../components/Loader';
 
 
-
-
-const BookmarkedUsers = ({ bookmarkedUsers, refreshUsers, toggleBookmark }) => {
+const BookmarkedUsers = ({ bookmarkedUsers, refreshUsers, toggleBookmark,loading }) => {
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [searchTimeout, setSearchTimeout] = useState(null);
     // eslint-disable-next-line
@@ -86,11 +85,17 @@ const BookmarkedUsers = ({ bookmarkedUsers, refreshUsers, toggleBookmark }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {console.log(bookmarkedUsers, "filteredUsers")}
-                            {filteredBookmarkedUsers.map((user) => (
+                        {loading ? (
+                <tr>
+                  <td colSpan={3} className="text-center">
+                    <Loader />
+                  </td>
+                </tr>
+              ) : (
+                            filteredBookmarkedUsers.map((user) => (
                                 <tr>
                                     <td>
-                                        <img src={user.avatar_url} alt={user.login} className="rounded-circle me-3 img-fluid img-thumbnail" />
+                                        <img src={user.avatar_url} alt={user.login} className="rounded-circle me-3 img-fluid img-thumbnail"  style={{ width: "100px", height: "100px" }}/>
                                     </td>
                                     <td>{user.login}</td>
                                     <td>
@@ -103,8 +108,9 @@ const BookmarkedUsers = ({ bookmarkedUsers, refreshUsers, toggleBookmark }) => {
                                         />
                                     </td>
                                 </tr>
-                            ))}
-                            
+                           ))
+                           )}
+
                         </tbody>
                     </table>
                     {isRefreshing && (
@@ -112,12 +118,8 @@ const BookmarkedUsers = ({ bookmarkedUsers, refreshUsers, toggleBookmark }) => {
                     )}
                 </PullToRefresh>
                 {filteredBookmarkedUsers.length === 0 && (
-                                
-                                <NoDataFound />
-                           
-
-                          
-                       )}
+                    <NoDataFound />
+                )}
 
                 <div className="text-center mt-3">
                     <button className="btn btn-primary" onClick={handleLoadMore}>
@@ -133,6 +135,8 @@ const mapStateToProps = (state) => ({
     bookmarkedUsers: state.bookmarkedUsers,
     searchQuery: state.searchQuery,
     selectedUsers: state.selectedUsers,
+    loading: state.loading,
+
 
 });
 
